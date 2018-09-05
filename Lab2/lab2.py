@@ -16,10 +16,10 @@ residual3 = f3[1][0]
 residual4 = f4[1][0]
 residual5 = f5[1][0]
 
-rms2 = residual2 / len(T)
-rms3 = residual3 / len(T)
-rms4 = residual4 / len(T)
-rms5 = residual5 / len(T)
+rms2 = np.sqrt(residual2 / len(T))
+rms3 = np.sqrt(residual3 / len(T))
+rms4 = np.sqrt(residual4 / len(T))
+rms5 = np.sqrt(residual5 / len(T))
 
 coe = f5[0]
 c5, c4, c3, c2, c1, c0 = coe
@@ -38,10 +38,33 @@ plt.title('Polynomial Curve Fitting')
 plt.plot(T, V, marker = 'o', linewidth = 0)
 plt.plot(T, V5)
 
-plt.show()
+#plt.show()
+
+
 
 
 # Solve for A
 A = 0
-for i in range(1, len(V)):
-    A += V[i] / np.sin(2 * np.pi * T[i])
+for i in range(len(V)):
+    if i % 10 != 0:
+        A += (V[i] / np.sin(2 * np.pi * T[i]))
+
+A /= 18
+
+func = lambda x: A * np.sin(2 * np.pi * x)
+Va = list(map(func, list(T)))
+
+rmsa = np.sqrt(np.average((Va - V)**2))
+
+plt.xticks(np.arange(0, 1.2, step = 0.2))
+plt.yticks(np.arange(-1, 1.5, step = 0.5))
+axes = plt.gca()
+axes.set_ylim([-1,1])
+plt.xlabel('Time')
+plt.ylabel('Voltage')
+plt.title('Sinusoidal Fitting')
+
+plt.plot(T, V, marker = 's', linewidth = 0)
+plt.plot(T, Va)
+
+#plt.show()
